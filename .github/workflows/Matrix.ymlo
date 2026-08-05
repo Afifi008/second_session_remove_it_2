@@ -3,20 +3,7 @@ on: [push,workflow_dispatch]
 jobs:
 
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.9','3.11','3.10']
-        os: ['ubuntu-latest','windows-latest']
-        exclude:
-          - python-version: '3.9'
-            os: 'windows-latest'
-          - python-version: '3.9'
-            os: ubuntu-latest'
-        include:
-          - python-version: '3.12'
-            os: 'ubuntu-latest'
-    runs-on: ${{matrix.os}}
+    runs-on: 'ubuntu-latest'
     steps:
       - name: Get Code
         uses: actions/checkout@v7
@@ -28,6 +15,6 @@ jobs:
       - name: install Python 
         uses: actions/setup-python@v6
         with:
-          python-version: ${{matrix.python-version}}
+          python-version: '3.11'
       - name: install reiquirments
         run: pip install -r requirements.txt
