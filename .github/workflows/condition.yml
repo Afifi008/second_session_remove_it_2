@@ -10,7 +10,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-${{hashFiles('requirements.txt')}}
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install Python 
         uses: actions/setup-python@v6
         with:
@@ -23,6 +23,12 @@ jobs:
         run: pytest tests/test_data_quality.py
       - name: print failuer message
         run: echo "Data Quality step has failed"
+      - name: outcome
+        if: steps.test_data_quality.outcome == 'failure'
+        run: echo "outcome is failure"
+      - name: conclusion
+        if: steps.test_data_quality.conclusion == 'failure'
+        run: echo "outcome is failure"
       - name: generate artifact
         run: python build_output.py
       - name: upload artifacts
@@ -32,12 +38,12 @@ jobs:
           path: |
             data/clean_sales.csv
             data/sales_by_category.csv
-  report:
-    needs: test
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: print metadata
-        run: |
-          echo "job has faild"
-          echo "${{toJson(github)}}"
+  # report:
+  #   needs: test
+  #   if: failure()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: print metadata
+  #       run: |
+  #         echo "job has faild"
+  #         echo "${{toJson(github)}}"
