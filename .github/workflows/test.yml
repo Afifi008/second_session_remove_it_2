@@ -3,8 +3,8 @@ on: [push, workflow_dispatch]
 env:
   MONGO_HOST: 'cluster0.tvwvq1n.mongodb.net'
   MONGO_DB: 'DEMO_CD'
-  MONGO_USER: 'Ahmed_Afifi'
-  MONGO_PASSWORD: 'qutTKosh7CpUoWGb'
+  MONGO_USER: ${{secrets.MONGO_USER}}
+  MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
 jobs:
   test:
     runs-on: ubuntu-latest 
