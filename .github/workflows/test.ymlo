@@ -1,6 +1,10 @@
 name: test project 
 on: [push, workflow_dispatch]
-
+env:
+  MONGO_HOST: 'cluster0.tvwvq1n.mongodb.net'
+  MONGO_DB: 'DEMO_CD'
+  MONGO_USER: 'Ahmed_Afifi'
+  MONGO_PASSWORD: 'qutTKosh7CpUoWGb'
 jobs:
   test:
     runs-on: ubuntu-latest 
@@ -63,8 +67,6 @@ jobs:
           key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install reiquirments
         run: pip install -r requirements.txt
-      - name: deploy 
-        run: echo "deploy is done"
       - name: download artifact
         uses: actions/download-artifact@v4
         with:
@@ -74,4 +76,6 @@ jobs:
         run: |
           cd data/
           ls
+      - name: deploy to Mongo
+        run: python deploy_to_mongo.py
 
