@@ -8,6 +8,13 @@ jobs:
       matrix:
         python-version: ['3.9','3.10','3.11']
         os: ['ubuntu-latest','windows-latest']
+        exclude:
+          - python-version: '3.9'
+            os: 'ubuntu-latest'
+        include:
+          - python-version: '3.12'
+            os: 'ubuntu-latest'
+         
 
     runs-on: ${{matrix.os}}
     steps:
@@ -17,7 +24,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip_${{hashFiles('requirements.txt')}}
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install Python 
         uses: actions/setup-python@v6
         with:
