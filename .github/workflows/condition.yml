@@ -21,7 +21,7 @@ jobs:
         id: test_data_quality
         run: pytest tests/test_data_quality.py
       - name: print failuer message
-        if: steps.test_data_quality.outcome == 'failure'
+        if: failure() && steps.test_data_quality.outcome == 'failure'
         run: echo "Data Quality step has failed"
       - name: generate artifact
         run: python build_output.py
