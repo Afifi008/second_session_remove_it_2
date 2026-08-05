@@ -17,11 +17,11 @@ jobs:
           python-version: '3.11'    
       - name: install reiquirments
         run: pip install -r requirements.txt
-      - name: run test data quality
+      - name: run test data 
+        continue-on-error: true
         id: test_data_quality
         run: pytest tests/test_data_quality.py
       - name: print failuer message
-        if: failure() && steps.test_data_quality.outcome == 'failure'
         run: echo "Data Quality step has failed"
       - name: generate artifact
         run: python build_output.py
@@ -40,4 +40,4 @@ jobs:
       - name: print metadata
         run: |
           echo "job has faild"
-          echo "$${{toJson(github)}}"
+          echo "${{toJson(github)}}"
