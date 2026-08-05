@@ -7,14 +7,19 @@ jobs:
     steps:
       - name: Get Code
         uses: actions/checkout@v7
-      # - name: install Python 
-      #   uses: actions/setup-python@v6
-      #   with:
-      #     python-version: '3.11'    
-      # - name: install reiquirments
-      #   run: pip install -r requirements.txt
-      # - name: run test data quality 
-      #   run: pytest tests/test_data_quality.py 
+      - name: install Python 
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'   
+      - name: caching requirments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip 
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
+      - name: install requirments
+        run: pip install -r requirements.txt
+      - name: run test data quality 
+        run: pytest tests/test_data_quality.py 
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -24,7 +29,12 @@ jobs:
       - name: install Python 
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'      
+          python-version: '3.11'     
+      - name: caching requirments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip 
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install reiquirments
         run: pip install -r requirements.txt
       - name: run build script
@@ -46,6 +56,11 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'      
+      - name: caching requirments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip 
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install reiquirments
         run: pip install -r requirements.txt
       - name: deploy 
