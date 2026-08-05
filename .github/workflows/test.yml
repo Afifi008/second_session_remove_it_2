@@ -1,0 +1,55 @@
+name: test project 
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v7
+      - name: install Python 
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'    
+      - name: install reiquirments
+        run: pip install -r requirements.txt
+      - name: Install dbt
+        run: pip install dbt-core dbt-sqlserver
+      - name: run test data quality 
+        run: pytest tests/test_data_quality.py 
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: get Code
+        uses: actions/checkout@v7
+      - name: install Python 
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'      
+      - name: install reiquirments
+        run: pip install -r requirements.txt
+      - name: run build script
+        run: python build_output.py
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifct_csv
+          path: |
+            artifact/clean_sales.csv
+            artifact/sales_by_category.csv
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest 
+    steps:
+      - name: get Code
+        uses: actions/checkout@v7
+      - name: install Python 
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'      
+      - name: install reiquirments
+        run: pip install -r requirements.txt
+      - name: deploy 
+        run: echo "deploy is done"
+
