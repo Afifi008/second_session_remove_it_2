@@ -11,58 +11,66 @@ jobs:
     with:
       python-version: '3.11'
       test-file: 'tests/test_data_quality.py '
-  build:
+  show_results:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: get Code
-        uses: actions/checkout@v7
-      - name: install Python 
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'     
-      - name: caching requirments
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip 
-          key: pip_requirments_${{hashFiles('requirements.txt')}}
-      - name: install reiquirments
-        run: pip install -r requirements.txt
-      - name: run build script
-        run: python build_output.py
-      - name: upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifct_csv
-          path: |
-            artifact/clean_sales.csv
-            artifact/sales_by_category.csv
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest 
-    steps:
-      - name: get Code
-        uses: actions/checkout@v7
-      - name: install Python 
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'      
-      - name: caching requirments
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip 
-          key: pip_requirments_${{hashFiles('requirements.txt')}}
-      - name: install reiquirments
-        run: pip install -r requirements.txt
-      - name: download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: artifct_csv
-          path: data/
-      - name: list files
+      - name: show results
         run: |
-          cd data/
-          ls
-      - name: deploy to Mongo
-        run: python deploy_to_mongo.py
+          echo "test status is : ${{needs.test.outputs.test_status}}"
+          echo "Number or Rows is  : ${{needs.test.outputs.row_count}}"
+  # build:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: get Code
+  #       uses: actions/checkout@v7
+  #     - name: install Python 
+  #       uses: actions/setup-python@v6
+  #       with:
+  #         python-version: '3.11'     
+  #     - name: caching requirments
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.cache/pip 
+  #         key: pip_requirments_${{hashFiles('requirements.txt')}}
+  #     - name: install reiquirments
+  #       run: pip install -r requirements.txt
+  #     - name: run build script
+  #       run: python build_output.py
+  #     - name: upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: artifct_csv
+  #         path: |
+  #           artifact/clean_sales.csv
+  #           artifact/sales_by_category.csv
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest 
+  #   steps:
+  #     - name: get Code
+  #       uses: actions/checkout@v7
+  #     - name: install Python 
+  #       uses: actions/setup-python@v6
+  #       with:
+  #         python-version: '3.11'      
+  #     - name: caching requirments
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.cache/pip 
+  #         key: pip_requirments_${{hashFiles('requirements.txt')}}
+  #     - name: install reiquirments
+  #       run: pip install -r requirements.txt
+  #     - name: download artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: artifct_csv
+  #         path: data/
+  #     - name: list files
+  #       run: |
+  #         cd data/
+  #         ls
+  #     - name: deploy to Mongo
+  #       run: python deploy_to_mongo.py
 

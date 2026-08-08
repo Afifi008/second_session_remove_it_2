@@ -9,8 +9,16 @@ on:
         default: '3.9'
       test-file:
         type: string
+    outputs:
+      test_status:
+        value: ${{jobs.test_reusabel.outputs.test_outcome}}
+      row_count:
+        value: ${{jobs.test_reusabel.outputs.number_of_rows}}
 jobs:
   test_reusabel:
+    outputs:
+      test_outcome: ${{steps.test_step.outcome}}
+      number_of_rows: ${{steps.count.outputs.rows}}
     runs-on: ubuntu-latest 
     steps:
       - name: Get Code
@@ -26,5 +34,11 @@ jobs:
           key: pip_requirments_${{hashFiles('requirements.txt')}}
       - name: install requirments
         run: pip install -r requirements.txt
-      - name: run test data quality 
+      - name: run test data quality
+        id: test_step
         run: pytest ${{inputs.test-file}}
+      - name: count of rows
+        id: count
+        run: |
+          ROWS=$(wc -l < data/raw_sales.csv)
+          echo "rows=$ROWS" >> $GITHUB_OUTPUT
