@@ -1,0 +1,21 @@
+name: test_job
+on: workflow_call
+jobs:
+  test_reusabel:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v7
+      - name: install Python 
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'   
+      - name: caching requirments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip 
+          key: pip_requirments_${{hashFiles('requirements.txt')}}
+      - name: install requirments
+        run: pip install -r requirements.txt
+      - name: run test data quality 
+        run: pytest tests/test_data_quality.py 
