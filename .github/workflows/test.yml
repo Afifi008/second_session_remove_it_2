@@ -8,6 +8,9 @@ env:
 jobs:
   test:
     uses: ./.github/workflows/reusable.yml
+    with:
+      python-version: '3.11'
+      test-file: 'tests/test_data_quality.py '
   build:
     needs: test
     runs-on: ubuntu-latest

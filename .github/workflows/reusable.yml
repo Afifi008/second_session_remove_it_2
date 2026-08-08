@@ -1,5 +1,14 @@
 name: test_job
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        type: string
+        description: "version of python"
+        required: false
+        default: '3.9'
+      test-file:
+        type: string
 jobs:
   test_reusabel:
     runs-on: ubuntu-latest 
@@ -9,7 +18,7 @@ jobs:
       - name: install Python 
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'   
+          python-version: ${{inputs.python-version}} 
       - name: caching requirments
         uses: actions/cache@v4
         with:
@@ -18,4 +27,4 @@ jobs:
       - name: install requirments
         run: pip install -r requirements.txt
       - name: run test data quality 
-        run: pytest tests/test_data_quality.py 
+        run: pytest ${{inputs.test-file}}
